@@ -521,6 +521,14 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    const pageUrl = window.location.origin + window.location.pathname;
+    const shareText = `Check out ${name} at our school: ${details.description}`;
+    const shareLinks = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`,
+      email: `mailto:?subject=${encodeURIComponent(name)}&body=${encodeURIComponent(shareText + "\n" + pageUrl)}`,
+    };
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -554,6 +562,13 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <a class="share-button share-facebook" target="_blank" rel="noopener noreferrer" href="${shareLinks.facebook}">Facebook</a>
+        <a class="share-button share-twitter" target="_blank" rel="noopener noreferrer" href="${shareLinks.twitter}">X</a>
+        <a class="share-button share-email" href="${shareLinks.email}">Email</a>
+        <button type="button" class="share-button share-copy">Copy link</button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -572,6 +587,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       </div>
     `;
+
+    const copyButton = activityCard.querySelector(".share-copy");
+    copyButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(pageUrl).then(() => {
+        copyButton.textContent = "Copied!";
+        setTimeout(() => (copyButton.textContent = "Copy link"), 2000);
+      });
+    });
 
     // Add click handlers for delete buttons
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
