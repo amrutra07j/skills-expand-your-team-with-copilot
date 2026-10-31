@@ -24,6 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggle = document.getElementById("theme-toggle");
+
+  // Apply the saved color theme
+  function setTheme(isDark) {
+    document.body.dataset.theme = isDark ? "dark" : "light";
+    const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+    themeToggle.setAttribute("aria-label", label);
+    themeToggle.title = label;
+    themeToggle.setAttribute("aria-pressed", isDark);
+    themeToggle.querySelector("span").textContent = isDark ? "☀️" : "🌙";
+  }
+
+  setTheme(localStorage.getItem("theme") === "dark");
+  themeToggle.addEventListener("click", () => {
+    const isDark = document.body.dataset.theme !== "dark";
+    setTheme(isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  });
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -503,7 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create activity tag
     const tagHtml = `
-      <span class="activity-tag" style="background-color: ${typeInfo.color}; color: ${typeInfo.textColor}">
+      <span class="activity-tag activity-tag-${activityType}">
         ${typeInfo.label}
       </span>
     `;
